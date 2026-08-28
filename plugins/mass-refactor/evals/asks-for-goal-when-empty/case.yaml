@@ -1,0 +1,50 @@
+schema_version: "1.1"
+name: asks-for-goal-when-empty
+description: >
+  Step 1 of the command says: use $ARGUMENTS if given, otherwise ask the user what the
+  refactor goal is. Checks the agent asks rather than inventing a plausible-looking
+  goal from whatever it finds in the repo.
+tags: [protocol, smoke]
+
+context:
+  scaffold_script: |
+    git init -q .
+    cat > package.json <<'EOF'
+    {
+      "name": "demo",
+      "scripts": {
+        "build": "tsc --noEmit",
+        "lint": "eslint .",
+        "test": "vitest run"
+      }
+    }
+    EOF
+    mkdir -p src
+    printf 'export const x: any = 1\n' > src/index.ts
+    git add -A && git -c user.email=e@x -c user.name=n commit -qm "init"
+
+execution:
+  prompt: /mass-refactor:mass-refactor
+  allowed_tools: [Read, Glob, Grep]
+  max_turns: 6
+  timeout_seconds: 300
+runs: 3
+
+graders:
+  - type: tool_used
+    name: does-not-launch-workflow
+    tool: Workflow
+    max: 0
+
+  - type: llm
+    name: asks-what-the-goal-is
+    criteria: >-
+      The response asks the user what the refactor goal is, because no goal was supplied
+      with the command.
+
+      FAIL if the response picks a goal on its own and proceeds as though the user had
+      asked for it (for example deciding to eliminate `any` types because it saw them in
+      the repo, without asking).
+
+expected_outcome: >-
+  Asks the user to state the refactor goal instead of inferring one from the repo.

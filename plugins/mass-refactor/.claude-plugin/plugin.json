@@ -1,0 +1,16 @@
+{
+  "name": "mass-refactor",
+  "version": "1.0.0",
+  "description": "Loop-driven mass refactor across many files: an error-queue-driven implementer/adversarial-reviewer/fixer loop, isolated in git worktrees, run to convergence against a build or test command. Modeled on the implementer/2-reviewer/fixer pattern used in large-scale AI-driven codebase migrations.",
+  "author": {
+    "name": "linehaulai"
+  },
+  "keywords": [
+    "refactor",
+    "migration",
+    "multi-agent",
+    "workflow",
+    "code-review",
+    "tdd"
+  ]
+}

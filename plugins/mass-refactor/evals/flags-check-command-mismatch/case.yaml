@@ -1,0 +1,99 @@
+schema_version: "1.1"
+name: flags-check-command-mismatch
+description: >
+  Step 2 requires sanity-checking that the proposed check command actually enforces the
+  stated goal, and saying so when it does not — otherwise the loop reports "clean" while
+  the goal is still unmet. Here the user proposes `go build ./...` for a %v-to-%w error
+  wrapping migration, which compiles identically either way and can never fail on it.
+tags: [protocol, correctness]
+
+context:
+  scaffold_script: |
+    git init -q .
+    cat > go.mod <<'EOF'
+    module example.com/demo
+
+    go 1.22
+    EOF
+    for pkg in store api auth billing sync report; do
+      mkdir -p internal/$pkg
+      cat > internal/$pkg/$pkg.go <<EOF
+    package $pkg
+
+    import "fmt"
+
+    func Load(id string) error {
+        if err := read(id); err != nil {
+            return fmt.Errorf("$pkg: loading %s: %v", id, err)
+        }
+        return nil
+    }
+
+    func Save(id string) error {
+        if err := write(id); err != nil {
+            return fmt.Errorf("$pkg: saving %s: %v", id, err)
+        }
+        return nil
+    }
+
+    func Delete(id string) error {
+        if err := write(id); err != nil {
+            return fmt.Errorf("$pkg: deleting %s: %v", id, err)
+        }
+        return nil
+    }
+
+    func Sync(id string) error {
+        if err := read(id); err != nil {
+            return fmt.Errorf("$pkg: syncing %s: %v", id, err)
+        }
+        return nil
+    }
+
+    func read(id string) error  { return nil }
+    func write(id string) error { return nil }
+    EOF
+    done
+    git add -A && git -c user.email=e@x -c user.name=n commit -qm "init"
+
+execution:
+  prompt: |-
+    /mass-refactor:mass-refactor migrate every fmt.Errorf that wraps an error with %v over to %w
+
+    Use `go build ./...` as the check command. Skip the test command, there's no suite yet.
+  allowed_tools: [Read, Glob, Grep]
+  max_turns: 8
+  timeout_seconds: 420
+runs: 3
+
+graders:
+  - type: llm
+    name: flags-the-mismatch
+    criteria: >-
+      The response tells the user that `go build ./...` cannot enforce this goal — code
+      using %v and code using %w both compile, so the build will pass whether or not the
+      migration happened.
+
+      FAIL if the response accepts `go build ./...` as the check command without raising
+      that it cannot detect the pattern being migrated.
+
+  - type: llm
+    name: proposes-a-command-that-actually-fails
+    criteria: >-
+      The response proposes at least one concrete check that would actually FAIL while
+      un-migrated `%v` wrapping remains — for example golangci-lint with the `errorlint`
+      or `wrapcheck` linter enabled, or a grep/ripgrep check that exits non-zero while
+      `fmt.Errorf(...%v", ..., err)` still appears.
+
+      Plain `go vet ./...` alone does NOT count: on this code vet exits clean, so it
+      cannot define done for this goal. FAIL if `go vet` is the only alternative offered,
+      or if no workable replacement is named at all.
+
+  - type: tool_used
+    name: does-not-launch-workflow
+    tool: Workflow
+    max: 0
+
+expected_outcome: >-
+  Rejects `go build ./...` as unable to enforce the goal, names a check that actually
+  fails on un-migrated code, and confirms before launching.

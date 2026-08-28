@@ -180,6 +180,16 @@
       "keywords": ["go", "golang", "testcontainers", "integration-testing", "docker", "containers"]
     },
     {
+      "name": "mass-refactor",
+      "source": "./plugins/mass-refactor",
+      "version": "1.0.0",
+      "description": "Loop-driven mass refactor: an implementer/2-adversarial-reviewer/fixer cycle, isolated in git worktrees, run to convergence against a build or test command.",
+      "author": {
+        "name": "linehaulai"
+      },
+      "keywords": ["refactor", "migration", "multi-agent", "workflow", "code-review", "tdd"]
+    },
+    {
       "name": "deep-wiki",
       "source": "./plugins/deep-wiki",
       "version": "2.0.0",
