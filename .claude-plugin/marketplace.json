@@ -76,7 +76,8 @@
     {
       "name": "slack-go-sdk",
       "source": "./plugins/slack-go-sdk",
-      "version": "1.0.0",
+      "version": "1.1.0",
+      "description": "Comprehensive guidance for building Slack applications with the official Go SDK, covering Web API, Canvas/Calls/Assistant, Socket Mode, Events API, OAuth, and Enterprise Grid admin",
       "author": {
         "name": "linehaul.ai"
       }

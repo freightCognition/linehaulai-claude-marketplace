@@ -59,9 +59,48 @@ api := slack.New(
 )
 ```
 
-## Rate Limiting Strategies
+## Built-In Retry Configuration
 
-Implement exponential backoff for rate limit handling:
+The SDK ships its own retry system (`retry.go`) — prefer this over hand-rolled backoff loops.
+
+### Simple: Retry 429s Only
+
+```go
+api := slack.New(token, slack.OptionRetry(3))
+```
+
+`OptionRetry(maxRetries)` uses `DefaultRetryConfig()` and `DefaultRetryHandlers`, which only retries HTTP 429 (rate-limited) responses, respecting Slack's `Retry-After` header plus jitter.
+
+### Full Control: Connection Errors, 429s, and 5xxs
+
+```go
+cfg := slack.DefaultRetryConfig()
+cfg.MaxRetries = 5
+cfg.Handlers = append(
+    slack.AllBuiltinRetryHandlers(cfg), // connection errors + 429
+    slack.NewServerErrorRetryHandler(cfg), // opt-in: also retry 5xx
+)
+
+api := slack.New(token, slack.OptionRetryConfig(cfg))
+```
+
+`RetryConfig` fields:
+
+| Field | Purpose |
+|---|---|
+| `MaxRetries` | Max retry attempts (0 = disabled) |
+| `Handlers` | Which failure modes to retry (nil = 429 only) |
+| `RetryAfterDuration` | Fallback wait when `Retry-After` header is missing/invalid |
+| `RetryAfterJitter` | Random jitter added to 429 waits |
+| `BackoffInitial` / `BackoffMax` / `BackoffJitter` | Exponential backoff bounds for 5xx/connection retries |
+
+Available handler constructors: `DefaultRetryHandlers(cfg)` (429 only), `ConnectionOnlyRetryHandlers()`, `AllBuiltinRetryHandlers(cfg)` (connection + 429), `NewServerErrorRetryHandler(cfg)` (5xx, opt-in since retrying writes on 5xx can double-apply side effects).
+
+**Caution**: only add the server-error handler for idempotent calls, or calls where duplicate execution (e.g. double-posted messages) is acceptable.
+
+## Manual Rate Limiting (Legacy Pattern)
+
+If you need retry logic outside the built-in system (e.g. in code that predates `OptionRetry`), implement exponential backoff for rate limit handling directly:
 
 ```go
 import "math"

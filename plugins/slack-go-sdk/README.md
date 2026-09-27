@@ -1,32 +1,38 @@
 # Slack Go SDK Plugin
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue) ![Go SDK](https://img.shields.io/badge/Go%20SDK-v0.12+-green)
+![Version](https://img.shields.io/badge/version-1.1.0-blue) ![Go SDK](https://img.shields.io/badge/Go%20SDK-v0.12+-green)
 
 ## Overview
 
-Comprehensive guidance for building Slack applications with the official Go SDK ([github.com/slack-go/slack](https://github.com/slack-go/slack)). This plugin provides expert knowledge for Web API operations, real-time event handling, OAuth flows, and security best practices.
+Comprehensive guidance for building Slack applications with the official Go SDK ([github.com/slack-go/slack](https://github.com/slack-go/slack)). This plugin provides expert knowledge for Web API operations, real-time event handling, OAuth flows, Enterprise Grid administration, and security best practices.
 
 ## What's Included
 
 - ✅ **Web API Operations**: Messages, channels, users, files
+- ✅ **Canvas, Calls, and Assistant APIs**: Document canvases, third-party call registration, AI Assistant threads
 - ✅ **Socket Mode & Events API**: Real-time event handling via WebSocket and HTTP webhooks
 - ✅ **OAuth Flows & Token Management**: Multi-workspace authentication and security
+- ✅ **Enterprise Grid Admin API**: Org-wide conversation, role, and team administration
 - ✅ **Block Kit Integration**: Rich message composition patterns
 - ✅ **Production Security Practices**: Token management, request verification, deployment checklists
+- ✅ **Built-in Retry & Test Server**: `OptionRetry`/`OptionRetryConfig` and the `slacktest` mock server
 
 ## Skills
 
 ### 🔧 slack-client-fundamentals
-Foundation skill covering client initialization, architecture decisions, error handling, and testing strategies. Use when setting up a new Slack bot or understanding when to use Web API vs Socket Mode.
+Foundation skill covering client initialization, architecture decisions, error handling, retry configuration, and testing strategies. Use when setting up a new Slack bot or understanding when to use Web API vs Socket Mode.
 
 ### 📤 slack-web-api
-Comprehensive guidance for synchronous Slack API operations including messaging, channel management, user operations, file uploads, and Block Kit composition. Use when implementing message posting, channel creation, or any direct API calls.
+Comprehensive guidance for synchronous Slack API operations including messaging, channel management, user operations, file uploads, Block Kit composition, Canvas documents, Calls registration, and AI Assistant threads. Use when implementing message posting, channel creation, or any direct API calls.
 
 ### ⚡ slack-realtime-events
 Real-time event handling with Socket Mode and Events API. Covers event routing, interactive components (buttons, modals), slash commands, and WebSocket connection management. Use when building interactive bots or event-driven applications.
 
 ### 🔐 slack-auth-security
 OAuth 2.0 flows, token management, scopes, permissions, and security best practices. Covers multi-workspace installations, token rotation, and production deployment security. Use when implementing app distribution or managing workspace authentication.
+
+### 🛡️ slack-admin-api
+Enterprise Grid Admin API for org-wide conversation, role, and team management. Use when building internal tooling for Slack org admins (requires an org-level admin token, not a bot token).
 
 ## Quick Start
 
@@ -63,19 +69,25 @@ See [QUICK_START.md](QUICK_START.md) for complete setup instructions.
 
 ## Reference Documentation
 
-18 detailed guides organized by concern in the `references/` directory:
+22 detailed guides organized by concern in the `references/` directory:
 
 **Core Setup** (2 guides):
-- [client-configuration.md](references/client-configuration.md) - Advanced client setup, custom HTTP clients, retries
-- [testing-patterns.md](references/testing-patterns.md) - Mocking strategies, integration tests
+- [client-configuration.md](references/client-configuration.md) - Advanced client setup, custom HTTP clients, built-in retry configuration
+- [testing-patterns.md](references/testing-patterns.md) - The `slacktest` mock server, interface mocking, integration tests
 
-**Web API** (6 guides):
+**Web API** (9 guides):
 - [web-api-messaging.md](references/web-api-messaging.md) - Message posting, threading, updates
 - [web-api-channels.md](references/web-api-channels.md) - Channel creation, management, metadata
 - [web-api-users.md](references/web-api-users.md) - User info, presence, profiles
 - [web-api-files.md](references/web-api-files.md) - File uploads, downloads, sharing
 - [block-kit-integration.md](references/block-kit-integration.md) - Rich message composition
 - [pagination-patterns.md](references/pagination-patterns.md) - Handling large result sets
+- [canvas-api.md](references/canvas-api.md) - Creating, editing, and sharing Canvases
+- [calls-api.md](references/calls-api.md) - Registering third-party calls
+- [assistant-api.md](references/assistant-api.md) - AI Assistant threads, suggested prompts, context search
+
+**Admin API** (1 guide):
+- [admin-api-reference.md](references/admin-api-reference.md) - Enterprise Grid conversations, roles, and team administration
 
 **Real-time Events** (5 guides):
 - [socket-mode-setup.md](references/socket-mode-setup.md) - WebSocket connection management
@@ -119,9 +131,10 @@ See [PLUGIN_OVERVIEW.md](PLUGIN_OVERVIEW.md) for detailed architecture documenta
 ```
 slack-client-fundamentals (foundation)
     ↓
-    ├─→ slack-web-api (synchronous operations)
+    ├─→ slack-web-api (synchronous operations, incl. Canvas/Calls/Assistant)
     ├─→ slack-realtime-events (Socket Mode + Events API)
-    └─→ slack-auth-security (OAuth + token management)
+    ├─→ slack-auth-security (OAuth + token management)
+    └─→ slack-admin-api (Enterprise Grid administration)
 ```
 
 ## Related Plugins

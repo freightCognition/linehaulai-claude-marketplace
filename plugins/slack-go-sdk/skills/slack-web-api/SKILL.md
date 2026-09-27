@@ -1,7 +1,7 @@
 ---
 name: slack-web-api
-description: Comprehensive guidance for Slack Web API operations with the Go SDK. Use when sending messages, posting to channels, creating or managing channels, retrieving user information, uploading files, composing Block Kit messages, or performing any synchronous Slack API operations.
-keywords: [slack, web-api, messaging, channels, file-uploads]
+description: Comprehensive guidance for Slack Web API operations with the Go SDK. Use when sending messages, posting to channels, creating or managing channels, retrieving user information, uploading files, composing Block Kit messages, creating or editing Canvases, registering Calls, building an AI Assistant thread, or performing any synchronous Slack API operations.
+keywords: [slack, web-api, messaging, channels, file-uploads, canvas, calls, assistant]
 ---
 
 # Slack Web API
@@ -134,6 +134,43 @@ Block Kit allows rich, interactive messages. See [block-kit-integration.md](../.
 - Interactive buttons and select menus
 - Input blocks for forms
 - Complete layout patterns
+
+## Canvas, Calls, and Assistant Threads
+
+### Create a Canvas
+
+```go
+canvasID, err := api.CreateCanvasContext(ctx, "Sprint Planning", slack.DocumentContent{
+    Type:     "markdown",
+    Markdown: "# Sprint Planning\n\n## Goals",
+})
+```
+
+See [canvas-api.md](../../references/canvas-api.md) for editing, access control, and section lookups.
+
+### Register a Call
+
+```go
+call, err := api.AddCallContext(ctx, slack.AddCallParameters{
+    JoinURL:          "https://calls.example.com/join/abc123",
+    ExternalUniqueID: "call-abc123",
+    CreatedBy:        "U1234567890",
+})
+```
+
+See [calls-api.md](../../references/calls-api.md) for updating, ending, and managing participants.
+
+### AI Assistant Threads
+
+```go
+err := api.SetAssistantThreadsStatusContext(ctx, slack.AssistantThreadsSetStatusParameters{
+    ChannelID: channelID,
+    ThreadTS:  threadTS,
+    Status:    "is thinking...",
+})
+```
+
+See [assistant-api.md](../../references/assistant-api.md) for suggested prompts, thread titles, and context search. This is Slack's AI-assistant-app surface, not a general LLM API.
 
 ## Error Handling
 

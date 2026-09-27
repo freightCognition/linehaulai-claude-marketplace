@@ -25,6 +25,17 @@ api := slack.New(
 )
 ```
 
+Enable built-in retry handling for rate limits (prefer this over hand-rolled backoff):
+
+```go
+api := slack.New(
+    "xoxb-your-bot-token",
+    slack.OptionRetry(3),
+)
+```
+
+See [client-configuration.md](../../references/client-configuration.md) for full retry configuration, including retrying connection errors and 5xx responses.
+
 ## When to Use Which Approach
 
 ### Web API (synchronous operations)
@@ -97,7 +108,8 @@ slack-bot/
 ## Testing Strategies
 
 See [testing-patterns.md](../../references/testing-patterns.md) for comprehensive testing guidance including:
-- Mocking the Slack API client
+- The SDK's built-in `slacktest` mock server (preferred for bot integration tests)
+- Mocking the Slack API client via interfaces
 - Integration testing patterns
 - Test fixtures for events and messages
 - CI/CD testing recommendations

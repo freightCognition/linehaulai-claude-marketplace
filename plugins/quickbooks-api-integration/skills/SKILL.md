@@ -1,10 +1,11 @@
 ---
 name: quickbooks-online-api
-description: Expert guide for QuickBooks Online API integration covering authentication, CRUD operations, batch processing, and best practices for invoicing, payments, and customer management.
-keywords: [quickbooks, accounting, api, oauth2, intuit]
-category: api-integration
-version: 1.0.0
-context7_library: /websites/developer_intuit_app_developer_qbo
+description: Design and review QuickBooks Online integrations for A/R invoices, A/P bills, payment reconciliation, OAuth2, and durable synchronization; includes Laneweaver TMS accounting boundaries.
+metadata:
+  keywords: [quickbooks, accounting, api, oauth2, intuit]
+  category: api-integration
+  version: 1.0.0
+  context7_library: /websites/developer_intuit_app_developer_qbo
 ---
 
 # QuickBooks Online API Expert Guide
@@ -15,9 +16,7 @@ The QuickBooks Online API provides comprehensive access to accounting data and o
 
 The QuickBooks Online API is REST-based, returns JSON or XML responses, and provides SDKs for Java, Python, PHP, Node.js, and C#. It supports both sandbox (development) and production environments.
 
-##
-
- When to Use This Skill
+## When to Use This Skill
 
 Use this skill when:
 - Building QuickBooks integrations for accounting automation
@@ -30,6 +29,49 @@ Use this skill when:
 - Designing multi-currency or international accounting integrations
 - Building reports or analytics on top of QuickBooks data
 - Migrating data to/from QuickBooks Online
+
+## Accounting Integration Design
+
+For accounting sync or specification reviews, trace the existing document and payment
+lifecycles before choosing API calls. These requirements govern the simplified API
+examples below; examples are not a complete reconciliation implementation.
+
+- **Establish ownership:** identify the local invoice/bill, its business owner, and
+  the system authorized to publish it or change settlement. Another provider may
+  already publish the same liability to QuickBooks. Match existing records before
+  creating more; do not assume every external bill maps one-to-one to a local bill.
+- **Separate A/R and A/P:** customer receipts use `Payment`; vendor settlements use
+  `BillPayment`. Preserve payment-to-document allocations, partial settlements,
+  and unapplied customer cash. Derive balances from the local payment ledger;
+  repeatedly setting paid flags or incrementing paid amounts is not reconciliation.
+- **Define posting boundaries:** distinguish an editable local draft from an issued
+  invoice or approved payable. Choose the export event explicitly. An accounting
+  export must not silently send a second customer email or initiate a bank payment.
+- **Preserve monetary meaning:** export saved document lines and exact amounts.
+  Define item/income/expense mappings, taxes, currency, rounding, fees, credits,
+  and gross-versus-net settlement. Excluding full chart-of-accounts sync does not
+  eliminate the mappings needed to post transactions.
+- **Retain transaction identity:** scope mappings by connection, environment, realm,
+  entity type, and local/remote IDs. Include invoices, bills, payments and allocation
+  identity, not only customers/vendors. Retain mappings after local voids. A reissue
+  is a new document; reconnecting to another company cannot reuse the old mappings.
+- **Make delivery recoverable:** persist export work with the business transaction
+  and process it through the existing queue/outbox. Saving a remote ID after success
+  does not cover a lost create response. Use stable supported request IDs and
+  reconciliation for ambiguous outcomes. Use `SyncToken` for updates and apply an
+  explicit field-ownership policy before retrying a conflicting accounting edit.
+- **Handle corrections:** define voids, credits, refunds, deleted/reallocated
+  payments, and replay behavior. Unsupported cases become visible reconciliation
+  exceptions; do not silently declare a document paid. Advance polling checkpoints
+  only after durable processing; receiving a webhook must not skip a polling window.
+- **Protect the connection:** reuse encrypted credential storage, tenant constraints
+  and RLS, user/organization-bound expiring OAuth state, and serialized refresh-token
+  rotation. Reuse repository patterns instead of adding a second integration framework.
+
+For **Laneweaver TMS** work, read
+[Laneweaver A/P and A/R design](references/laneweaver-accounting.md) before proposing
+schema, sync triggers, payment imports, or changes to QuickBooks issue #146. Its
+repository-specific rules do not apply automatically to other products.
 
 ## Authentication & OAuth2 Setup
 

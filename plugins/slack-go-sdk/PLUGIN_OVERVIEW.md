@@ -7,17 +7,19 @@
 ```
 slack-client-fundamentals (Foundation)
     ↓
-    ├─→ slack-web-api (Synchronous Operations)
+    ├─→ slack-web-api (Synchronous Operations, incl. Canvas/Calls/Assistant)
     ├─→ slack-realtime-events (Socket Mode + Events API)
-    └─→ slack-auth-security (OAuth + Token Management)
+    ├─→ slack-auth-security (OAuth + Token Management)
+    └─→ slack-admin-api (Enterprise Grid Administration)
 ```
 
-**Pattern**: Hybrid - Foundation skill with three parallel concern-based skills
+**Pattern**: Hybrid - Foundation skill with four parallel concern-based skills
 
 ### Design Rationale
 
-- **Foundation First**: `slack-client-fundamentals` provides shared knowledge (client setup, testing, architecture decisions)
-- **Parallel Concerns**: Three independent skills allow focused usage without loading unnecessary context
+- **Foundation First**: `slack-client-fundamentals` provides shared knowledge (client setup, retry config, testing, architecture decisions)
+- **Parallel Concerns**: Four independent skills allow focused usage without loading unnecessary context
+- **Admin Split Out**: `slack-admin-api` is separated from `slack-web-api` because it requires a different token type (org admin, not bot) and targets a different audience (workspace admins, not bot developers)
 - **Progressive Disclosure**: Skills provide quick reference (~80-90 lines), references provide depth (~80-100 lines each)
 
 ## Coverage Map
@@ -31,13 +33,16 @@ slack-client-fundamentals (Foundation)
 - Files: Upload, download, share, delete, multi-part uploads
 - Block Kit: Sections, buttons, selects, images, modals, forms
 
-**Reference Files** (6):
+**Reference Files** (9):
 - web-api-messaging.md
 - web-api-channels.md
 - web-api-users.md
 - web-api-files.md
 - block-kit-integration.md
 - pagination-patterns.md
+- canvas-api.md
+- calls-api.md
+- assistant-api.md
 
 ### Real-time Events (slack-realtime-events)
 
@@ -95,6 +100,20 @@ slack-client-fundamentals (Foundation)
 - scopes-permissions.md
 - manifest-api.md
 - security-checklist.md
+
+### Admin API (slack-admin-api)
+
+**Enterprise Grid Administration**:
+- Conversations: search, archive/unarchive, rename, delete, bulk archive/delete/move, restrict access, retention, EKM
+- Roles: add/list/remove role assignments
+- Teams: settings info, name, description, icon, default channels, discoverability
+
+**Requirements**:
+- Org-level admin/owner token (not a bot token)
+- Enterprise Grid workspace
+
+**Reference Files** (1):
+- admin-api-reference.md
 
 ## When to Use Each Skill
 
@@ -160,6 +179,21 @@ slack-client-fundamentals (Foundation)
 - Production security hardening
 - Multi-tenant applications
 
+### slack-admin-api
+
+**Trigger Questions**:
+- "How do I search conversations across the whole org?"
+- "How do I assign an admin role to a user?"
+- "How do I bulk-archive or move channels between teams?"
+- "How do I change a workspace's discoverability setting?"
+- "How do I restrict a channel to specific groups?"
+
+**Use Cases**:
+- Internal tooling for Enterprise Grid org admins
+- Bulk channel lifecycle management
+- Role assignment automation
+- Workspace/team settings management
+
 ## Reference Documentation
 
 ### Organization
@@ -169,11 +203,12 @@ References are organized by **concern** rather than skill:
 ```
 references/
 ├── Core Setup (2 files)
-├── Web API (6 files)
+├── Web API (9 files)
+├── Admin API (1 file)
 ├── Real-time Events (5 files)
 └── Auth & Security (5 files)
 
-Total: 18 reference files
+Total: 22 reference files
 ```
 
 ### Progressive Disclosure Strategy
@@ -223,13 +258,13 @@ Total: 18 reference files
 
 ## File Statistics
 
-- **Total Files**: 27
-- **Skills**: 4 (~335 lines total)
-- **References**: 18 (~1,610 lines total)
-- **Documentation**: 4 (~370 lines)
+- **Total Files**: 32
+- **Skills**: 5 (~460 lines total)
+- **References**: 22 (~2,000 lines total)
+- **Documentation**: 4 (~390 lines)
 - **Plugin Manifest**: 1
 
-**Total Lines**: ~2,325 (excluding code examples)
+**Total Lines**: ~2,850 (excluding code examples, approximate)
 
 ## Design Decisions
 
@@ -257,10 +292,13 @@ Total: 18 reference files
 
 **Coverage**:
 - ✅ Web API (messaging, channels, users, files, Block Kit)
+- ✅ Canvas, Calls, and Assistant thread APIs
 - ✅ Socket Mode (WebSocket events)
 - ✅ Events API (HTTP webhooks)
 - ✅ OAuth (multi-workspace, token management)
+- ✅ Enterprise Grid Admin API (conversations, roles, teams)
 - ✅ Security (verification, encryption, best practices)
+- ✅ Built-in retry configuration and `slacktest` mock server
 
 **Quality**:
 - ✅ Production-ready code examples

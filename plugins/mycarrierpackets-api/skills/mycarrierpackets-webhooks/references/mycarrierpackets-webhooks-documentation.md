@@ -1,4 +1,4 @@
-[![](https://mycarrierpackets.com/Images/descartes_mcp_logo@2x.png)](https://mycarrierportal.com/ "MyCarrierPortal")
+  [![](https://mycarrierpackets.com/Images/descartes_mcp_logo@2x.png)](https://mycarrierportal.com/ "MyCarrierPortal")
 
 #### Webhook Documentation
 

@@ -13,6 +13,7 @@ This plugin helps developers:
 - **OAuth2 Authentication**: Set up and manage QuickBooks API authentication with automatic token refresh
 - **Invoice Management**: Create, update, and send invoices with line items, taxes, and custom fields
 - **Payment Processing**: Record payments, handle partial payments, and apply payments across multiple invoices
+- **Accounting Design Reviews**: Review A/P and A/R ownership, allocation-based reconciliation, and provider overlap; includes a [Laneweaver reference](skills/references/laneweaver-accounting.md)
 - **Data Synchronization**: Implement Change Data Capture (CDC) polling and webhook-based real-time sync
 - **Batch Operations**: Efficiently process bulk creates, updates, and queries (up to 30 operations per request)
 - **Error Handling**: Troubleshoot common API errors with specific resolution patterns

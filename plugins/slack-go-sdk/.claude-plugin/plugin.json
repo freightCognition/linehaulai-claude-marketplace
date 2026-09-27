@@ -1,10 +1,10 @@
 {
   "name": "slack-go-sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Comprehensive guidance for building Slack applications with the official Go SDK",
   "author": {
     "name": "linehaul.ai",
     "email": "support@linehaul.ai"
   },
-  "keywords": ["slack", "go", "sdk", "bot", "api", "oauth", "events", "socket-mode"]
+  "keywords": ["slack", "go", "sdk", "bot", "api", "oauth", "events", "socket-mode", "admin", "canvas", "calls", "assistant"]
 }

@@ -1,6 +1,49 @@
 # Testing Patterns for Slack Go Applications
 
+## The slacktest Package (Preferred for Bot Integration Tests)
+
+The SDK ships `github.com/slack-go/slack/slacktest`, a mock HTTP + WebSocket server that stands in for the real Slack API — prefer this over hand-rolled mocks for anything that exercises RTM/messaging behavior.
+
+```go
+import (
+    "testing"
+
+    "github.com/slack-go/slack"
+    "github.com/slack-go/slack/slacktest"
+)
+
+func TestBotRespondsToMessage(t *testing.T) {
+    server := slacktest.NewTestServer()
+    server.SetBotName("mybot")
+    go server.Start()
+    defer server.Stop()
+
+    api := slack.New("test-token", slack.OptionAPIURL(server.GetAPIURL()))
+
+    rtm := server.GetTestRTMInstance()
+    go rtm.ManageConnection()
+
+    server.SendMessageToBot("C1234567890", "hello bot")
+
+    if !server.SawOutgoingMessage("some expected reply") {
+        t.Errorf("expected bot to reply, but it didn't")
+    }
+}
+```
+
+Useful `*slacktest.Server` methods:
+
+- `GetAPIURL()` / `GetWSURL()` — point a real `*slack.Client`/RTM connection at the mock server
+- `SendMessageToBot(channel, msg)` / `SendDirectMessageToBot(msg)` — simulate inbound messages
+- `SawMessage(msg)` / `SawOutgoingMessage(msg)` — assert on messages seen by the server
+- `GetChannels()` / `GetGroups()` — inspect the mock workspace's seeded state
+- `SetBotName(name)` — configure the bot identity the server reports
+
+This exercises real `slack.Client`/RTM wire behavior (JSON payloads, WebSocket framing) instead of just your own interface, catching integration bugs that pure interface mocks miss.
+
 ## Mocking the Slack API Client
+
+Use interface-based mocking below for pure unit tests where you don't need real wire-level behavior — reach for `slacktest` above when you do.
 
 ### Interface-Based Mocking
 
