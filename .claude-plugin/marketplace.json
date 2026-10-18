@@ -199,6 +199,16 @@
         "name": "thegovind"
       },
       "keywords": ["wiki", "documentation", "vitepress", "mermaid", "onboarding", "research", "changelog"]
+    },
+    {
+      "name": "extend-ui-svelte",
+      "source": "./plugins/extend-ui-svelte",
+      "version": "1.0.0",
+      "description": "Build document-heavy Svelte 5 apps with extend-ui-svelte: PDF/DOCX/XLSX/PPTX/CSV viewers and editors, file upload and file system, schema builder, document splits, layout blocks, bounding-box citations, e-signature, and primitives.",
+      "author": {
+        "name": "linehaul.ai"
+      },
+      "keywords": ["svelte", "svelte5", "extend-ui", "pdf", "docx", "xlsx", "pptx", "csv", "document-viewer", "e-signature", "shadcn-svelte"]
     }
   ]
 }

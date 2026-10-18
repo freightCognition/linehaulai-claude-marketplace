@@ -1,0 +1,11 @@
+{
+  "name": "extend-ui-svelte",
+  "version": "1.0.0",
+  "description": "Build document-heavy Svelte 5 apps with extend-ui-svelte: PDF/DOCX/XLSX/PPTX/CSV viewers and editors, file upload and file system, schema builder, document splits, layout blocks, bounding-box citations, e-signature, and primitives.",
+  "author": {
+    "name": "linehaul.ai",
+    "email": "support@linehaul.ai"
+  },
+  "license": "MIT",
+  "keywords": ["svelte", "svelte5", "runes", "extend-ui", "pdf", "docx", "xlsx", "pptx", "csv", "document-viewer", "e-signature", "shadcn-svelte", "registry"]
+}
