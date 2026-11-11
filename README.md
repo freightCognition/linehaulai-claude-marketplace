@@ -19,6 +19,7 @@ This repository hosts a collection of reusable Claude Code plugins designed to a
 - **layerchart**: Pre-built chart components for rapid data visualization (bar, line, pie, tree maps, geographic charts).
 - **layercake**: Headless visualization framework for unlimited custom visualizations (maximum flexibility).
 - **svelte5-runes**: Comprehensive guidance for Svelte 5 runes system, reactivity patterns, and Svelte 4→5 migration.
+- **cult-ui**: Catalog of all 134 Cult UI motion-rich shadcn/ui components (docs links, install names, dependencies) with `/cult-ui:find` and `/cult-ui:add` commands.
 
 ### Integration & Logic
 

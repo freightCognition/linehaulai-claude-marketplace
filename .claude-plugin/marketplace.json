@@ -209,6 +209,16 @@
         "name": "linehaul.ai"
       },
       "keywords": ["svelte", "svelte5", "extend-ui", "pdf", "docx", "xlsx", "pptx", "csv", "document-viewer", "e-signature", "shadcn-svelte"]
+    },
+    {
+      "name": "cult-ui",
+      "source": "./plugins/cult-ui",
+      "version": "1.0.0",
+      "description": "Complete Cult UI toolkit: catalog of all 134 motion-rich shadcn/ui components with docs links, install names and dependencies, plus /cult-ui:find and /cult-ui:add",
+      "author": {
+        "name": "linehaul.ai"
+      },
+      "keywords": ["cult-ui", "shadcn", "react", "tailwind", "motion", "components"]
     }
   ]
 }

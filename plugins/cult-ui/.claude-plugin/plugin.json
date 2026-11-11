@@ -1,0 +1,10 @@
+{
+  "name": "cult-ui",
+  "version": "1.0.0",
+  "description": "Complete Cult UI (cult-ui.com) toolkit: a catalog of all 134 motion-rich shadcn/ui components with docs links, install names and dependencies, plus /cult-ui:find and /cult-ui:add to pick, install and retoken components",
+  "author": {
+    "name": "linehaul.ai"
+  },
+  "homepage": "https://www.cult-ui.com/docs/components",
+  "keywords": ["cult-ui", "shadcn", "react", "tailwind", "motion", "components", "ui", "animation"]
+}
